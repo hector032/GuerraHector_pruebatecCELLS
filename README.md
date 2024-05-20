@@ -15,21 +15,22 @@ Esta aplicación permite a los usuarios agregar nuevos productos mediante un for
 1. Clona este repositorio.
 
 2. Entrar en el docker con la terminal (necesitas tener el Docker ya abierto)
-    run -it -v C:\Users\User\TuRuta:/usr/src/app -p 8001:8001 cells-formation sh 
+    `docker run -it -v C:\Users\User\TuRuta:/usr/src/app -p 8001:8001 cells-formation sh`
 
 3. Navega al directorio del proyecto:
-    cd nombre-del-proyecto 
+    `cd nombre-del-proyecto` 
 
 4. Instala las dependencias:
-    npm i
+    `npm i`
 
 5. En el package.json añade el script start
-    "scripts": {
+    
+    `"scripts": {
     "start": "cells app:serve -c dev.js -b novulcanize -p 8001 --sourcemaps"
-    },
+    },`
 
 6. Ejecuta el proyecto
-    npm run start
+    `npm run start`
 
 7. Abre tu navegador y navega a:
     http://localhost:8000
