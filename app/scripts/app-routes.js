@@ -5,22 +5,16 @@ import {
 /*
  * NOTE: "path" field has to be unique, if not it will use the 1st match
  */
+// Deberíamos borrar las rutas que no necesitamos
 export const NAVIGATION = [{
     path: '/',
     page: 'create-product',
-}, {
-    path: '/create-product',
-    page: 'create-product',
-    menuText: 'create-product',
-    menuIcon: bbvaHome,
-}, {
+},
+{
     path: '/list-product',
     page: 'list-product',
     menuText: 'list-product',
     menuIcon: bbvaHome,
-}, {
-    path: '/login',
-    page: 'create-product',
 }];
 
 export const ROUTES = NAVIGATION.reduce((res, value) => {

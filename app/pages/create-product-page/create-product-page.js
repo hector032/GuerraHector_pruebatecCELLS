@@ -24,39 +24,29 @@ class CreateProductPage extends BbvaCoreIntlMixin(CellsPage) {
     return 'create-product-page';
   }
 
+  // Borramos propiedades que no utilizamos
   static get properties() {
     return {
       i18nKeys: {
         type: Object,
         attribute: false,
       },
-      showForm: {
-        type: Boolean,
-        attribute: 'show-form',
-      },
-      _uniqueId: {
-        type: String,
-        attribute: false,
-      },
     };
   }
 
+  // Borramos propiedades que no utilizamos
   constructor() {
     super();
     this.i18nKeys = {};
-    this.showForm = false;
-    this._uniqueId = randomID();
   }
 
   static get styles() {
     return [ styles ];
   }
 
+  // Borramos propiedades que no estamos utilizando
   firstUpdated(props) {
     super.firstUpdated && super.firstUpdated(props);
-    const queryScope = this.shadowRoot || this;
-    this._dm = queryScope.querySelector('demo-data-dm');
-    this._form = queryScope.querySelector('form');
     window.IntlMsg.lang = localStorage.getItem('language') || 'en-US';
   }
 
@@ -67,6 +57,7 @@ class CreateProductPage extends BbvaCoreIntlMixin(CellsPage) {
     super.update && super.update(props);
   }
 
+  //💪 muy bien, limpiamos el formulario al entrar en la pagina
   onPageEnter() {
     this._resetForm();
   }
@@ -91,13 +82,14 @@ class CreateProductPage extends BbvaCoreIntlMixin(CellsPage) {
     `;
   }
 
+  // Siempre tenemos que tener un attribute name en los inputs de un formulario
   get _formCreateProductTpl() {
     return html `
         <form enctype="multipart/form-data">        
           <h2>${this.t(this._i18nKeys.formHeading)}</h2>
-          <bbva-web-form-text id="product" label="${this.t(this._i18nKeys.labelInput1)}"></bbva-web-form-text>
-          <bbva-web-form-amount id="price" label="${this.t(this._i18nKeys.labelInput2)}"></bbva-web-form-amount>
-          <bbva-web-form-text id="description" label="${this.t(this._i18nKeys.labelInput3)}"></bbva-web-form-text>
+          <bbva-web-form-text required name="product" id="product" label="${this.t(this._i18nKeys.labelInput1)}"></bbva-web-form-text>
+          <bbva-web-form-amount required name="price" id="price" label="${this.t(this._i18nKeys.labelInput2)}"></bbva-web-form-amount>
+          <bbva-web-form-text required name="description" id="description" label="${this.t(this._i18nKeys.labelInput3)}"></bbva-web-form-text>
           <bbva-web-button-default
             id="send"
             type="button" 
@@ -113,17 +105,27 @@ class CreateProductPage extends BbvaCoreIntlMixin(CellsPage) {
     ev.preventDefault();
     ev.stopPropagation();
 
-    const product = this.shadowRoot.getElementById('product').value;
-    const price = this.shadowRoot.getElementById('price').value;
-    const description = this.shadowRoot.getElementById('description').value;
+    const form = ev.target.closest('form');
+    const formData = new FormData(form);
 
+
+    /*
+    // Si utilizamos attributo required en el input nos evitamos hacer está validación
     if (product && price && description) {
-      const newProduct = { product, price, description };
-      this.publish('queue_products', newProduct);
-      this.navigate('list-product');
+
     } else {
       alert('Por favor, complete todos los campos');
     }
+    */
+
+
+    const newProduct = {
+      product: formData.get('product'),
+      price: formData.get('price'),
+      description: formData.get('description')
+    };
+    this.publish('queue_products', newProduct);
+    this.navigate('list-product');
   }
 }
 

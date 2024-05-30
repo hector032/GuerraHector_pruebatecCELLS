@@ -21,30 +21,20 @@ class ListProductPage extends BbvaCoreIntlMixin(CellsPage) {
     return 'list-product-page';
   }
 
+  // Borramos propiedades que no estamos utilizando
   static get properties() {
     return {
       i18nKeys: {
         type: Object,
         attribute: false,
       },
-
-      showForm: {
-        type: Boolean,
-        attribute: 'show-form',
-      },
-
-      _uniqueId: {
-        type: String,
-        attribute: false,
-      },
     };
   }
 
+  // Borramos propiedades que no estamos utilizando
   constructor() {
     super();
     this.i18nKeys = {};
-    this.showForm = false;
-    this._uniqueId = randomID();
     this._products = [];
   }
 
@@ -54,9 +44,6 @@ class ListProductPage extends BbvaCoreIntlMixin(CellsPage) {
 
   firstUpdated(props) {
     super.firstUpdated && super.firstUpdated(props);
-    const queryScope = this.shadowRoot || this;
-    this._dm = queryScope.querySelector('demo-data-dm');
-    this._form = queryScope.querySelector('form');
     window.IntlMsg.lang = localStorage.getItem('language') || 'en-US';
   }
 
@@ -67,16 +54,21 @@ class ListProductPage extends BbvaCoreIntlMixin(CellsPage) {
     super.update && super.update(props);
   }
 
+  // NO debería hacer falta comprobar si es un array
   onPageEnter() {
-    const existingProducts =
-                JSON.parse(localStorage.getItem('bbdd_product')) || [];
-    this._products = Array.isArray(existingProducts) ? existingProducts : [];
+    const existingProducts = JSON.parse(localStorage.getItem('bbdd_product')) || [];
+    this._products = [
+      ...this._products,
+      ...existingProducts,
+    ];
+
     this.subscribe('queue_products', (ev) => {
       this._products = ev;
       existingProducts.push(this._products);
       localStorage.setItem('bbdd_product', JSON.stringify(existingProducts));
       this._updateProductList();
     });
+
     this._updateProductList();
   }
 
@@ -85,6 +77,7 @@ class ListProductPage extends BbvaCoreIntlMixin(CellsPage) {
     this.requestUpdate();
   }
 
+  // Hecho en falta el campo de imagen y para borrar la card
   render() {
     return html `
       <demo-web-template page-title="List Product">
@@ -93,6 +86,7 @@ class ListProductPage extends BbvaCoreIntlMixin(CellsPage) {
     `;
   }
 
+  // 💪 Muy bien hemos utilizado el componente Card de BBVA
   get _cardListProduct() {
     return html `
       <div>
